@@ -1,0 +1,852 @@
+<!-- Sistema de Pixels do Facebook -->
+<script src="../pixel/config.js"></script>
+<script src="../pixel/loader.js"></script>
+<script src="../pixel/events.js"></script>
+<script src="../pixel/checkout.js"></script>
+
+<script src="js/j2cpjQi892S8.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="icon" href="images/mHdOLKvTPXv3.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Biblioteca QRCode.js para gerar QR codes -->
+    <script src="js/4SxPV0xqujNz.js"></script>
+<style>* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #4A2B0F;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.id-number {
+    color: #4A2B0F;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.value-input {
+    display: flex;
+    position: relative;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.currency-prefix {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-weight: 500;
+}
+
+.value-field {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 0 5px 5px 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    outline: none;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.payment-option {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.payment-option.pix {
+    background-color: #01A355;
+    border-color: #01A355;
+    color: white;
+}
+
+.radio-button {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.payment-option.pix .radio-button {
+    border-color: white;
+}
+
+.payment-option.pix .radio-button::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.charity-options {
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    display: flex;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.charity-item {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+    color: #333;
+    border-right: 1px dashed #a1a1a1;
+    height: 120px;
+    justify-content: center;
+}
+
+.charity-item:last-child {
+    border-right: none;
+}
+
+.charity-item.selected {
+    background-color: rgba(1, 163, 85, 0.6); /* Fundo semi-transparente */
+    color: #ffffff; /* Texto branco puro para maior contraste */
+    text-shadow: 1px 1px 2px rgba(85, 85, 85, 0.5); /* Sombra sutil */
+}
+
+.charity-item.selected:last-child {
+    border-right: none;
+}
+
+.charity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+.charity-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.heart-icon {
+    background-color: #f0f9ff;
+}
+
+.society-icon {
+    background-color: #f0fdf4;
+}
+
+.lucky-icon {
+    background-color: #01A355;
+}
+
+.charity-item.selected .charity-icon {
+    background-color: white;
+}
+
+.charity-item.selected .charity-icon img {
+    filter: none; /* Remove qualquer alteraÃ§Ã£o na imagem */
+}
+
+.charity-name {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.charity-price {
+    font-size: 12px;
+    color: #666;
+}
+
+.charity-item.selected .charity-price {
+    color: white;
+}
+
+.lucky-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.summary {
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 15px 0;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.custom-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-top: 2px;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: #333;
+}
+
+.privacy-notice {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 30px;
+    margin-left: 28px;
+}
+
+.contribute-button {
+    background-color: #01A355;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.contribute-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.contribute-button.processing {
+    position: relative;
+    color: transparent;
+}
+
+.contribute-button.processing::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none; /* Inicialmente oculto */
+}
+</style>
+<style>
+.preset-value-btn.active, .preset-value-btn:active, .preset-value-btn:focus {
+    background: #24CA68 !important;
+    color: #fff !important;
+    border-color: #24CA68 !important;
+}
+.preset-value-btn.active span, .preset-value-btn:active span, .preset-value-btn:focus span {
+    color: #fff !important;
+}
+</style></head>
+
+
+<body>
+    <div class="main-content">
+        <header>
+            <div class="container">
+                <div class="content-header d-flex align-items-center justify-content-between">
+                    <div class="logo">
+                </div>
+            </div>
+        </header>
+<br>
+        <h1>🙏 💔 Sua ajuda, Salva Vidas !!! </h1>
+
+        <!-- Campos de dados pessoais -->
+        <div id="personal-data-section" style="margin-bottom: 20px;">
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px;">Telefone (WhatsApp)</label>
+                <input type="tel" placeholder="(00) 00000 0000" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f8f9fa; box-sizing: border-box;">
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px;">E-mail</label>
+                <input type="email" placeholder="Insira o seu melhor e-mail" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f8f9fa; box-sizing: border-box;">
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px;">CPF</label>
+                <div style="position: relative;">
+                    <input type="text" placeholder="000.000.000-00" style="width: 100%; padding: 12px; padding-right: 40px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f8f9fa; box-sizing: border-box;">
+                    
+                </div>
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px;">Nome completo</label>
+                <input type="text" placeholder="Insira seu nome de registro" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f8f9fa; box-sizing: border-box;">
+            </div>
+        </div>
+                            <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px;">Digite o valor da sua doação</label>
+
+        <div class="value-input">
+            <div class="currency-prefix">R$</div>
+            <input type="tel" id="contribution-input" class="value-field" value="0,00">
+        </div>
+        
+        <!-- Checkbox para doação anônima -->
+        <div class="checkbox-container" style="margin: 20px 0; gap: 10px;">
+            <label style="display: flex; align-items: center; cursor: pointer; font-size: 14px; color: #333; font-weight: 600;">
+                
+                <input type="checkbox" id="anonymous-donation" style="margin-right: 10px; width: 18px; height: 18px; accent-color: #01A355;" onchange="togglePersonalData()">
+                <span>Doar anonimamente</span>            
+            </label>
+        </div>
+      
+        <div id="error-message" class="error-message">
+            Valor mínimo da doação é de R$ 20,00
+        </div>
+        <div id="max-error-message" class="error-message">
+            Valor máximo permitido é de R$ 10.000,00
+        </div>
+
+        <div class="section-title">Forma de pagamento</div>
+        <div class="payment-methods">
+            <div class="payment-option pix">
+                <span class="radio-button"></span>
+                <span>Pix</span>
+            </div>
+        </div>
+        </div>
+
+        <!-- Turbine sua doação - Novo design -->
+        <div class="turbine-donation-card" style="background: #EEFFE6; border-radius: 12px; padding: 0; margin: 20px 0; overflow: hidden;">
+            <!-- Header verde -->
+            <div class="turbine-header" id="turbine-header" style="border-radius: 12px; background: #EEFFE6; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <input type="checkbox" id="turbine-checkbox" style="width: 18px; height: 18px; accent-color: #01a355; border: 2px solid #EEFFE6; cursor: pointer; transition: all 0.3s ease; transform: scale(1);" onchange="toggleTurbineOptions()">
+                    <span style="color: white; font-weight: 700; font-size: 16px; text-transform: uppercase; transition: all 0.3s ease; background: #01A355; padding: 2px 6px; border-radius: 8px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); ">TURBINE SUA DOAÇÃO</span>
+                </div>
+                <span style="color: rgb(0, 0, 0); font-weight: 600; font-size: 16px; transition: all 0.3s ease;">+R$ 5,99</span>
+                <!-- Efeito de brilho -->
+                <div id="turbine-glow" style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.6s ease; pointer-events: none;"></div>
+            </div>
+            
+            <!-- Opções -->
+            <div class="turbine-options">
+                <!-- Opção 1: 3 números da sorte -->
+                <div class="turbine-option" style="padding: 15px 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <img src="images/lucky.webp" alt="Trevo" style="width: 24px; height: 24px; object-fit: contain;" id="turbine-icon-1">
+                            
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: #333; font-size: 14px;">3 números da sorte</div>
+                            <div style="color: #666; font-size: 12px; line-height: 1.3;">Você e quem criou a vaquinha concorrem ao sorteio de R$ 15.000,00 do Vakinha Premiada</div>
+                        </div>
+                    </div>
+                    <span style="color: #333; font-weight: 600; font-size: 14px;">Grátis</span>
+                </div>
+                
+                <!-- Opção 2: 3 Corações -->
+                <div class="turbine-option" style="padding: 15px 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <img src="images/coracao.webp" alt="Coração" style="width: 24px; height: 24px; object-fit: contain;" id="turbine-icon-2">
+                        <div>
+                            <div style="font-weight: 600; color: #333; font-size: 14px;">3 Corações</div>
+                            <div style="color: #666; font-size: 12px; line-height: 1.3;">Destacam essa vaquinha na plataforma</div>
+                        </div>
+                    </div>
+                    <span style="color: #333; font-weight: 600; font-size: 14px;">R$ 3,99</span>
+                </div>
+                
+                <!-- Opção 3: Vakinha além do Câncer -->
+                <div class="turbine-option" style="padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <img src="images/infantil.webp" alt="Vakinha além do Câncer" style="width: 24px; height: 24px; object-fit: contain;" id="turbine-icon-3">
+                        <div>
+                            <div style="font-weight: 600; color: #333; font-size: 14px;">Vakinha além do Câncer</div>
+                            <div style="color: #666; font-size: 12px; line-height: 1.3;">Você ajuda crianças no tratamento do câncer infantil a terem acolhimento e experiências mágicas</div>
+                        </div>
+                    </div>
+                    <span style="color: #333; font-weight: 600; font-size: 14px;">R$ 2,00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-item">
+                <span>Contribuição:</span>
+                <span>R$ 0,00</span>
+            </div>
+            
+            <!-- Itens do Turbine -->
+            <div class="summary-item" id="turbine-numeros" style="display: none;">
+                <span>3 números da sorte:</span>
+                <span>Grátis</span>
+            </div>
+            <div class="summary-item" id="turbine-coracoes" style="display: none;">
+                <span>3 Corações:</span>
+                <span>R$ 3,99</span>
+            </div>
+            <div class="summary-item" id="turbine-cancer" style="display: none;">
+                <span>Vakinha além do Câncer:</span>
+                <span>R$ 2,00</span>
+            </div>
+            
+            <div class="divider"></div>
+            <div class="summary-item">
+                <span>Total:</span>
+                <span>R$ 0,00</span>
+            </div>
+        </div>
+
+        <button class="contribute-button">Contribuir</button>
+        
+        <!-- Disclaimers e Informações Legais -->
+        <div style="margin-top: 20px; text-align: center;">
+            <!-- Disclaimer Legal -->
+            <p style="color: #666; font-size: 12px; line-height: 1.4; margin-bottom: 15px;">
+                Ao clicar no botão acima você declara que é maior de 18 anos, leu e está de acordo com os 
+                <a href="#" style="color: #0066cc; text-decoration: none;">Termos, Taxas e Prazos</a>
+            </p>
+            
+            <!-- Selo de Segurança -->
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 15px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                <img src="images/SELO.webp" alt="Selo de Segurança" style="width: 115px; height: 40px; object-fit: contain;">
+                <span style="color: #0000000; font-size: 12px; line-height: 1.3;">
+                    Garantimos uma experiência segura para todos os nossos doadores.
+                </span>
+            </div>
+            
+            <!-- Informações de Cadastro -->
+            <p style="color: #666; font-size: 11px; line-height: 1.4; max-width: 500px; margin: 0 auto;">
+                Informamos que o preenchimento do seu cadastro completo estará disponível em seu painel pessoal na plataforma após a conclusão desta doação. Importante destacar a importância da adequação do seu cadastro, informando o nome social, caso o utilize.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Variável global para compatibilidade com o código NinjaPay
+        var ninjapay_ajax = {
+            nonce: 'abc123' // Substitua por um nonce real se necessário
+        };
+        
+        // Função para mostrar/ocultar campos de dados pessoais
+        function togglePersonalData() {
+            const personalDataSection = document.getElementById('personal-data-section');
+            const anonymousCheckbox = document.getElementById('anonymous-donation');
+            
+            if (anonymousCheckbox.checked) {
+                personalDataSection.style.display = 'none';
+            } else {
+                personalDataSection.style.display = 'block';
+            }
+        }
+
+        // Função para controlar o checkbox do turbine
+        function toggleTurbineOptions() {
+            const checkbox = document.getElementById('turbine-checkbox');
+            const turbineHeader = document.getElementById('turbine-header');
+            const turbineGlow = document.getElementById('turbine-glow');
+            
+            // Elementos do summary
+            const turbineNumeros = document.getElementById('turbine-numeros');
+            const turbineCoracoes = document.getElementById('turbine-coracoes');
+            const turbineCancer = document.getElementById('turbine-cancer');
+            const summaryTotal = document.querySelector('.summary-item:last-child span:last-child');
+            
+            if (checkbox.checked) {
+                // Efeitos visuais quando selecionado
+                checkbox.style.transform = 'scale(1.1)';
+                
+                
+                // Efeito de brilho
+                setTimeout(() => {
+                    turbineGlow.style.left = '100%';
+                }, 100);
+                
+                // Mostrar todos os itens do turbine no summary
+                turbineNumeros.style.display = 'flex';
+                turbineCoracoes.style.display = 'flex';
+                turbineCancer.style.display = 'flex';
+                
+                // Calcular e atualizar o total
+                updateTurbineTotal();
+                
+            } else {
+                // Efeitos visuais quando não selecionado
+                checkbox.style.transform = 'scale(1)';
+                checkbox.style.boxShadow = 'none';
+                turbineHeader.style.boxShadow = 'none';
+                
+                // Resetar efeito de brilho
+                turbineGlow.style.left = '-100%';
+                
+                // Ocultar todos os itens do turbine no summary
+                turbineNumeros.style.display = 'none';
+                turbineCoracoes.style.display = 'none';
+                turbineCancer.style.display = 'none';
+                
+                // Recalcular o total sem os itens do turbine
+                updateTurbineTotal();
+            }
+        }
+
+        // Função para atualizar o total incluindo os itens do turbine
+        function updateTurbineTotal() {
+            const checkbox = document.getElementById('turbine-checkbox');
+            const summaryTotal = document.querySelector('.summary-item:last-child span:last-child');
+            const contributionSpan = document.querySelector('.summary-item:first-child span:last-child');
+            
+            // Pegar o valor da contribuição atual
+            let contributionValue = 0;
+            if (contributionSpan) {
+                const contributionText = contributionSpan.textContent.replace('R$ ', '').replace('.', '').replace(',', '.');
+                contributionValue = parseFloat(contributionText) || 0;
+            }
+            
+            // Calcular total do turbine se selecionado
+            let turbineTotal = 0;
+            if (checkbox && checkbox.checked) {
+                // 3 números da sorte: Grátis (0)
+                // 3 Corações: R$ 3,99
+                // Vakinha além do Câncer: R$ 2,00
+                turbineTotal = 3.99 + 2.00; // Total: R$ 5,99
+            }
+            
+            // Calcular total geral
+            const totalValue = contributionValue + turbineTotal;
+            
+            // Atualizar o total no summary
+            if (summaryTotal) {
+                summaryTotal.textContent = `R$ ${totalValue.toFixed(2).replace('.', ',')}`;
+            }
+        }
+    </script>
+    <script>document.addEventListener("DOMContentLoaded", () => {
+  // Elementos do formulário
+  const contributionInput = document.getElementById("contribution-input")
+  const errorMessage = document.getElementById("error-message")
+  const maxErrorMessage = document.getElementById("max-error-message")
+  const contributeButton = document.querySelector(".contribute-button")
+  const paymentOption = document.querySelector(".payment-option.pix")
+  const charityItems = document.querySelectorAll(".charity-item")
+  const summaryContribution = document.querySelector(".summary-item:first-child span:last-child")
+  const summaryTotal = document.querySelector(".summary-item:last-child span:last-child")
+
+  // Variáveis de controle
+  let selectedAmount = 0
+  const additionalAmounts = [] // Array para armazenar múltiplos valores adicionais
+  const MIN_AMOUNT = 20
+  const MAX_AMOUNT = 10000
+
+  // Definir os valores corretos para cada item
+  const itemValues = {
+    "Vacina Antirrábica": 39.7,
+    "1kg de ração": 32.99,
+    "Sabonete Matacura": 63.89,
+  }
+
+  // Formatar valor como moeda
+  function formatCurrency(value) {
+    return Number(Number.parseFloat(value).toFixed(2)).toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  }
+
+  // Atualizar resumo
+  function updateSummary(showMinError = false) {
+    // Calcular o total somando o valor base e todos os adicionais selecionados
+    const additionalTotal = additionalAmounts.reduce((sum, amount) => sum + amount, 0)
+    const baseTotal = selectedAmount + additionalTotal
+
+    // Calcular total do turbine se selecionado
+    const turbineCheckbox = document.getElementById('turbine-checkbox');
+    let turbineTotal = 0;
+    if (turbineCheckbox && turbineCheckbox.checked) {
+      // 3 números da sorte: Grátis (0)
+      // 3 Corações: R$ 3,99
+      // Vakinha além do Câncer: R$ 2,00
+      turbineTotal = 3.99 + 2.00; // Total: R$ 5,99
+    }
+
+    const total = baseTotal + turbineTotal
+
+    summaryContribution.textContent = `R$ ${formatCurrency(selectedAmount)}`
+    summaryTotal.textContent = `R$ ${formatCurrency(total)}`
+
+    // Arredondar para 2 casas decimais para evitar problemas de comparação
+    const roundedTotal = Math.round(total * 100) / 100
+
+    // Habilitar/desabilitar botão com base no valor mínimo
+    if (roundedTotal >= MIN_AMOUNT && roundedTotal <= MAX_AMOUNT) {
+      contributeButton.classList.add("active")
+      errorMessage.style.display = "none"
+      maxErrorMessage.style.display = "none"
+    } else if (roundedTotal > MAX_AMOUNT) {
+      contributeButton.classList.remove("active")
+      errorMessage.style.display = "none"
+      maxErrorMessage.style.display = "block"
+    } else {
+      contributeButton.classList.remove("active")
+      // Só mostra a mensagem de valor mínimo se showMinError for true
+      errorMessage.style.display = showMinError ? "block" : "none"
+      maxErrorMessage.style.display = "none"
+    }
+
+    // Log para debug
+    // console.log("Valores adicionais:", additionalAmounts)
+    // console.log("Total adicional:", additionalTotal)
+    // console.log("Total geral:", total)
+  }
+
+  // Inicializar máscara de moeda no input
+  function initCurrencyMask() {
+    contributionInput.addEventListener("input", (e) => {
+      let value = e.target.value.replace(/\D/g, "")
+      value = (Number.parseInt(value) / 100).toFixed(2)
+      // Se o campo estiver vazio, define como 0
+      if (!e.target.value.replace(/\D/g, "")) {
+        value = "0.00"
+      }
+      e.target.value = formatCurrency(value)
+
+      // Corrigir a conversão do valor para número
+      selectedAmount = Number.parseFloat(value)
+      // Só mostra erro se o usuário já digitou algo
+      updateSummary(true)
+      // Remover destaque dos botões pré-definidos ao editar manualmente
+      document.querySelectorAll('.preset-value-btn').forEach(function(b){b.classList.remove('active')});
+    })
+
+    // Inicializar com 0,00
+    contributionInput.value = formatCurrency(0)
+  }
+
+  // Configurar os itens de caridade
+  function setupCharityItems() {
+    // Mapa para rastrear quais itens estão selecionados e seus índices no array
+    const selectedItemsMap = new Map()
+
+    charityItems.forEach((item) => {
+      // Obter o nome do item
+      const itemName = item.querySelector(".charity-name").textContent
+
+      // Definir o valor correto baseado no nome
+      if (itemValues[itemName]) {
+        item.dataset.value = itemValues[itemName].toString()
+      }
+
+      // Adicionar evento de clique
+      item.addEventListener("click", function () {
+        const value = Number.parseFloat(this.dataset.value)
+        const itemId = this.dataset.value + "-" + itemName // ID único para o item
+
+        // Toggle seleção
+        if (this.classList.contains("selected")) {
+          // Remover seleção
+          this.classList.remove("selected")
+
+          // Se o item estiver no mapa, remova-o do array usando o índice armazenado
+          if (selectedItemsMap.has(itemId)) {
+            const index = selectedItemsMap.get(itemId)
+            additionalAmounts.splice(index, 1)
+
+            // Atualizar os índices no mapa após a remoção
+            selectedItemsMap.forEach((val, key) => {
+              if (val > index) {
+                selectedItemsMap.set(key, val - 1)
+              }
+            })
+
+            // Remover o item do mapa
+            selectedItemsMap.delete(itemId)
+          }
+        } else {
+          // Adicionar seleção
+          this.classList.add("selected")
+
+          // Adicionar valor ao array e armazenar seu índice no mapa
+          additionalAmounts.push(value)
+          selectedItemsMap.set(itemId, additionalAmounts.length - 1)
+        }
+
+        updateSummary()
+      })
+    })
+  }
+
+  // Inicializar
+  function init() {
+      // Força o modo anônimo ao carregar
+document.getElementById("anonymous-donation").checked = true;
+togglePersonalData();
+
+    // Inicializar máscara de moeda
+    initCurrencyMask()
+
+    // Configurar itens de caridade
+    setupCharityItems()
+
+    // Marcar PIX como selecionado por padrão
+    paymentOption.classList.add("selected")
+
+    // Esconder mensagens de erro inicialmente
+    errorMessage.style.display = "none"
+    maxErrorMessage.style.display = "none"
+
+    // Atualizar resumo inicial
+    updateSummary(false)
+
+    // Configurar botões de valores pré-definidos
+    document.querySelectorAll('.preset-value-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var value = this.getAttribute('data-value');
+        contributionInput.value = Number(value).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        selectedAmount = Number(value);
+        updateSummary();
+        // Destaca o botão ativo
+        document.querySelectorAll('.preset-value-btn').forEach(function(b){b.classList.remove('active')});
+        this.classList.add('active');
+      });
+    });
+
+    // Configurar listener para o checkbox do turbine
+    const turbineCheckbox = document.getElementById('turbine-checkbox');
+    if (turbineCheckbox) {
+      turbineCheckbox.addEventListener('change', function() {
+        updateSummary();
+      });
+    }
+  }
+
+  // Processar pagamento
+  contributeButton.addEventListener("click", () => {
+    const additionalTotal = additionalAmounts.reduce((sum, amount) => sum + amount, 0)
+    const baseTotal = selectedAmount + additionalTotal
+
+    // Calcular total do turbine se selecionado
+    const turbineCheckbox = document.getElementById('turbine-checkbox');
+    let turbineTotal = 0;
+    if (turbineCheckbox && turbineCheckbox.checked) {
+      // 3 números da sorte: Grátis (0)
+      // 3 Corações: R$ 3,99
+      // Vakinha além do Câncer: R$ 2,00
+      turbineTotal = 3.99 + 2.00; // Total: R$ 5,99
+    }
+
+    const total = baseTotal + turbineTotal
+
+    // Arredondar para 2 casas decimais para evitar problemas de comparação
+    const roundedTotal = Math.round(total * 100) / 100
+
+    // Verificar valor mínimo
+    if (roundedTotal < MIN_AMOUNT) {
+      errorMessage.style.display = "block"
+      return
+    }
+
+    // Verificar valor máximo
+    if (roundedTotal > MAX_AMOUNT) {
+      maxErrorMessage.style.display = "block"
+      return
+    }
+
+    // Mostrar indicador de carregamento no botão
+    contributeButton.innerHTML = '<div class="spinner-small"></div> Processando...'
+    contributeButton.disabled = true
+
+    // Redirecionar para a página de pagamento com o valor como parâmetro (em centavos)
+    const valueInCents = Math.round(roundedTotal * 100)
+    const search = window.location.search
+    window.location.href = `../pagamento/index.html?value=${valueInCents}${search ? '&' + search.slice(1) : ''}`
+  })
+
+  // Inicializar tudo
+  init()
+})
+
+
+</script>
+
+
+</body></html>

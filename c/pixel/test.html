@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Pixel do Facebook</title>
+    
+    <!-- Sistema de Pixels do Facebook -->
+    <script src="config.js"></script>
+    <script src="loader.js"></script>
+    <script src="events.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste do Pixel do Facebook</h1>
+        
+        <div class="test-section">
+            <h3>📊 Status do Pixel</h3>
+            <div id="pixelStatus" class="status info">
+                Verificando status do pixel...
+            </div>
+            <button class="test-button" onclick="checkPixelStatus()">Verificar Status</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Teste de Eventos</h3>
+            <button class="test-button" onclick="testPageView()">Testar PageView</button>
+            <button class="test-button" onclick="testInitiateCheckout()">Testar InitiateCheckout</button>
+            <button class="test-button" onclick="testPurchase()">Testar Purchase</button>
+            <button class="test-button" onclick="testPurchaseWithoutCurrency()">Testar Purchase sem Moeda</button>
+            <button class="test-button" onclick="testPurchaseWithBRL()">Testar Purchase com BRL</button>
+            <div id="eventStatus" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔧 Teste de Configuração</h3>
+            <button class="test-button" onclick="showConfig()">Mostrar Configuração</button>
+            <button class="test-button" onclick="addTestPixel()">Adicionar Pixel de Teste</button>
+            <button class="test-button" onclick="removeTestPixel()">Remover Pixel de Teste</button>
+            <div id="configStatus" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📝 Logs do Console</h3>
+            <div id="consoleLog" class="log"></div>
+            <button class="test-button" onclick="clearLog()">Limpar Log</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔗 Links de Teste</h3>
+            <p>Teste com parâmetros UTM:</p>
+            <a href="?utm_source=facebook&utm_medium=cpc&utm_campaign=teste&utm_content=banner&utm_term=doacao&value=5000" class="test-button">Teste com UTMs</a>
+            <a href="?value=10000" class="test-button">Teste com Valor</a>
+        </div>
+    </div>
+
+    <script>
+        // Captura logs do console
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logContainer = document.getElementById('consoleLog');
+        
+        function addToLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span style="color: #666;">[${timestamp}]</span> <span style="color: ${type === 'error' ? '#dc3545' : '#007bff'};">${message}</span>`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToLog(args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToLog(args.join(' '), 'error');
+        };
+        
+        // Funções de teste
+        function checkPixelStatus() {
+            const statusDiv = document.getElementById('pixelStatus');
+            if (window.isFacebookPixelLoaded()) {
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Pixel do Facebook carregado com sucesso!';
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Pixel do Facebook não foi carregado.';
+            }
+        }
+        
+        function testPageView() {
+            const statusDiv = document.getElementById('eventStatus');
+            try {
+                window.trackFacebookEvent('PageView');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Evento PageView disparado com sucesso!';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar PageView: ' + error.message;
+            }
+        }
+        
+        function testInitiateCheckout() {
+            const statusDiv = document.getElementById('eventStatus');
+            try {
+                window.trackFacebookEvent('InitiateCheckout');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Evento InitiateCheckout disparado com sucesso!';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar InitiateCheckout: ' + error.message;
+            }
+        }
+        
+        function testPurchase() {
+            const statusDiv = document.getElementById('eventStatus');
+            try {
+                window.trackFacebookEvent('Purchase', {
+                    value: 100.50,
+                    currency: 'BRL'
+                });
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Evento Purchase disparado com sucesso! (R$ 100,50)';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar Purchase: ' + error.message;
+            }
+        }
+        
+        function testPurchaseWithoutCurrency() {
+            const statusDiv = document.getElementById('eventStatus');
+            try {
+                window.trackFacebookEvent('Purchase', {
+                    value: 100.50
+                });
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Evento Purchase disparado com sucesso! (R$ 100,50 - BRL automático)';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar Purchase: ' + error.message;
+            }
+        }
+        
+        function testPurchaseWithBRL() {
+            const statusDiv = document.getElementById('eventStatus');
+            try {
+                window.trackFacebookEvent('Purchase', {
+                    value: 100.50,
+                    currency: 'BRL'
+                });
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Evento Purchase disparado com sucesso! (R$ 100,50 - BRL explícito)';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar Purchase: ' + error.message;
+            }
+        }
+        
+        function showConfig() {
+            const statusDiv = document.getElementById('configStatus');
+            const config = window.FACEBOOK_PIXEL_CONFIG;
+            statusDiv.className = 'status info';
+            statusDiv.innerHTML = `
+                <strong>Configuração Atual:</strong><br>
+                Pixel Principal: ${config.pixelId}<br>
+                Pixels Adicionais: ${config.additionalPixels.length}<br>
+                Moeda: ${config.currency}<br>
+                Debug: ${config.debug ? 'Ativado' : 'Desativado'}
+            `;
+        }
+        
+        function addTestPixel() {
+            const statusDiv = document.getElementById('configStatus');
+            try {
+                window.addFacebookPixel('123456789012345');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Pixel de teste adicionado!';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao adicionar pixel: ' + error.message;
+            }
+        }
+        
+        function removeTestPixel() {
+            const statusDiv = document.getElementById('configStatus');
+            try {
+                window.removeFacebookPixel('123456789012345');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Pixel de teste removido!';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao remover pixel: ' + error.message;
+            }
+        }
+        
+        function clearLog() {
+            logContainer.innerHTML = '';
+        }
+        
+        // Verifica status inicial
+        setTimeout(checkPixelStatus, 2000);
+    </script>
+</body>
+</html> 

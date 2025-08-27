@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Campanhas - Pixel Facebook</title>
+    
+    <!-- Sistema de Pixels do Facebook -->
+    <script src="config.js"></script>
+    <script src="loader.js"></script>
+    <script src="events.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .step {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .step h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .checklist li:before {
+            content: "☐ ";
+            color: #6c757d;
+        }
+        .checklist li.checked:before {
+            content: "☑ ";
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Teste de Campanhas - Pixel Facebook</h1>
+        
+        <div class="test-section">
+            <h3>📊 Status do Pixel</h3>
+            <div id="pixelStatus" class="status info">
+                Verificando status do pixel...
+            </div>
+            <button class="test-button" onclick="checkPixelStatus()">Verificar Status</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Simulação de Funnel Completo</h3>
+            <p>Teste o fluxo completo que seus usuários farão:</p>
+            
+            <div class="step">
+                <h4>1. PageView (Página Principal)</h4>
+                <button class="test-button" onclick="simulatePageView()">Simular PageView</button>
+                <div id="pageviewStatus" class="status"></div>
+            </div>
+            
+            <div class="step">
+                <h4>2. InitiateCheckout (Página de Checkout)</h4>
+                <button class="test-button" onclick="simulateInitiateCheckout()">Simular InitiateCheckout</button>
+                <div id="checkoutStatus" class="status"></div>
+            </div>
+            
+            <div class="step">
+                <h4>3. Purchase (Pagamento Aprovado)</h4>
+                <input type="number" id="purchaseValue" placeholder="Valor (ex: 100.50)" value="100.50" style="padding: 5px; margin-right: 10px;">
+                <button class="test-button" onclick="simulatePurchase()">Simular Purchase</button>
+                <div id="purchaseStatus" class="status"></div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Verificação de Campanhas</h3>
+            <div class="step">
+                <h4>Checklist de Verificação</h4>
+                <ul class="checklist" id="verificationChecklist">
+                    <li>Pixel carregando corretamente</li>
+                    <li>Eventos aparecendo no Facebook Events Manager</li>
+                    <li>Parâmetros corretos (value + currency BRL)</li>
+                    <li>Facebook Pixel Helper mostrando eventos</li>
+                    <li>Campanha configurada para conversões</li>
+                    <li>Evento de conversão selecionado (Purchase)</li>
+                    <li>Dados aparecendo no Ads Manager</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <h4>Links de Verificação</h4>
+                <a href="https://business.facebook.com/events_manager2/list/pixel/697876539759619" target="_blank" class="test-button">Facebook Events Manager</a>
+                <a href="https://adsmanager.facebook.com" target="_blank" class="test-button">Facebook Ads Manager</a>
+                <a href="https://chrome.google.com/webstore/detail/facebook-pixel-helper/fdgfkebogiimcoedmjlcbhdnplpahbom" target="_blank" class="test-button">Instalar Pixel Helper</a>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📝 Logs do Console</h3>
+            <div id="consoleLog" class="log"></div>
+            <button class="test-button" onclick="clearLog()">Limpar Log</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🚨 Troubleshooting</h3>
+            <div class="step">
+                <h4>Se os eventos não chegarem nas campanhas:</h4>
+                <ol>
+                    <li><strong>Verifique o Events Manager</strong> - Se os eventos aparecem lá, o pixel está funcionando</li>
+                    <li><strong>Verifique a configuração da campanha</strong> - Deve estar otimizada para "Conversões"</li>
+                    <li><strong>Verifique o evento de conversão</strong> - Deve ser "Purchase"</li>
+                    <li><strong>Aguarde 24-48 horas</strong> - O Facebook pode demorar para processar</li>
+                    <li><strong>Verifique a janela de atribuição</strong> - Configure para 1-7 dias</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Captura logs do console
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logContainer = document.getElementById('consoleLog');
+        
+        function addToLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span style="color: #666;">[${timestamp}]</span> <span style="color: ${type === 'error' ? '#dc3545' : '#007bff'};">${message}</span>`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToLog(args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToLog(args.join(' '), 'error');
+        };
+        
+        // Funções de teste
+        function checkPixelStatus() {
+            const statusDiv = document.getElementById('pixelStatus');
+            if (window.isFacebookPixelLoaded()) {
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ Pixel do Facebook carregado com sucesso!';
+                updateChecklist(0, true);
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Pixel do Facebook não foi carregado.';
+                updateChecklist(0, false);
+            }
+        }
+        
+        function simulatePageView() {
+            const statusDiv = document.getElementById('pageviewStatus');
+            try {
+                window.trackFacebookEvent('PageView');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ PageView disparado com sucesso!';
+                updateChecklist(1, true);
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar PageView: ' + error.message;
+                updateChecklist(1, false);
+            }
+        }
+        
+        function simulateInitiateCheckout() {
+            const statusDiv = document.getElementById('checkoutStatus');
+            try {
+                window.trackFacebookEvent('InitiateCheckout');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ InitiateCheckout disparado com sucesso!';
+                updateChecklist(2, true);
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar InitiateCheckout: ' + error.message;
+                updateChecklist(2, false);
+            }
+        }
+        
+        function simulatePurchase() {
+            const statusDiv = document.getElementById('purchaseStatus');
+            const value = parseFloat(document.getElementById('purchaseValue').value);
+            
+            if (!value || value <= 0) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Por favor, insira um valor válido.';
+                return;
+            }
+            
+            try {
+                window.trackFacebookEvent('Purchase', {
+                    value: value,
+                    currency: 'BRL'
+                });
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `✅ Purchase disparado com sucesso! (R$ ${value.toFixed(2).replace('.', ',')})`;
+                updateChecklist(3, true);
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Erro ao disparar Purchase: ' + error.message;
+                updateChecklist(3, false);
+            }
+        }
+        
+        function updateChecklist(index, checked) {
+            const checklist = document.getElementById('verificationChecklist');
+            const items = checklist.getElementsByTagName('li');
+            
+            if (items[index]) {
+                if (checked) {
+                    items[index].classList.add('checked');
+                } else {
+                    items[index].classList.remove('checked');
+                }
+            }
+        }
+        
+        function clearLog() {
+            logContainer.innerHTML = '';
+        }
+        
+        // Verifica status inicial
+        setTimeout(checkPixelStatus, 2000);
+        
+        // Adiciona informações úteis
+        console.log('🎯 Teste de Campanhas iniciado');
+        console.log('📊 Pixel ID:', window.FACEBOOK_PIXEL_CONFIG.pixelId);
+        console.log('💰 Moeda padrão:', window.FACEBOOK_PIXEL_CONFIG.currency);
+        console.log('🔧 Debug mode:', window.FACEBOOK_PIXEL_CONFIG.debug);
+    </script>
+</body>
+</html> 

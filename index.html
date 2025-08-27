@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Patas do Bem</title>
+    
+    <!-- Pixel Scripts -->
+    <script>
+        window.pixelId = "68ad15f0529f6b08a347af0e";
+    </script>
+    <script async defer src="https://cdn.utmify.com.br/scripts/pixel/pixel.js"></script>
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async defer></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // React-like functionality with vanilla JS
+        let state = {
+            activeTab: "inicio",
+            showCopySuccess: false,
+            expandedFaq: null,
+            showDonationsModal: false
+        };
+
+        const pixKey = "Sua contribuição mudará vidas!";
+
+        const animals = [
+            { name: "Theo", image: "https://midias.lat/wp/wp-content/uploads/2025/06/6D669BB6-AA7A-4064-B777-621CDB75795D.webp" },
+            { name: "Athena", image: "https://midias.lat/wp/wp-content/uploads/2025/06/78F6DE94-F938-44B8-87BD-1B48EF27A407.webp" },
+            { name: "Jazz", image: "https://midias.lat/wp/wp-content/uploads/2025/06/9291D8B5-1BD6-4567-8123-B42DB2575249.webp" },
+            { name: "Elisa", image: "https://midias.lat/wp/wp-content/uploads/2025/06/7602BE03-8876-4D7C-834D-67D61B6BB2D1.webp" },
+            { name: "Mel", image: "https://midias.lat/wp/wp-content/uploads/2025/06/715a0775-1c64-4d29-a382-e13900f39cad.webp" },
+            { name: "Luna", image: "https://midias.lat/wp/wp-content/uploads/2025/06/37196b8d-e6cf-4f8e-ace0-07fc3640ff55.webp" },
+            { name: "Bia", image: "https://midias.lat/wp/wp-content/uploads/2025/06/c498b91a-4d78-423b-8227-0a7d6310c106.webp" },
+            { name: "Lucia", image: "https://midias.lat/wp/wp-content/uploads/2025/05/image.webp" }
+        ];
+
+        function copyPixKey() {
+            navigator.clipboard.writeText(pixKey);
+            state.showCopySuccess = true;
+            render();
+            setTimeout(() => {
+                state.showCopySuccess = false;
+                render();
+            }, 2000);
+        }
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+
+        function scrollToPix() {
+            scrollToSection("pix-section");
+        }
+
+        function toggleFaq(faqId) {
+            state.expandedFaq = state.expandedFaq === faqId ? null : faqId;
+            render();
+        }
+
+        function setActiveTab(tabId) {
+            state.activeTab = tabId;
+            render();
+        }
+
+        function showDonationsModal() {
+            state.showDonationsModal = true;
+            render();
+        }
+
+        function hideDonationsModal() {
+            state.showDonationsModal = false;
+            render();
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="min-h-screen bg-gradient-to-b from-amber-400 via-orange-400 to-yellow-500">
+                    ${state.showDonationsModal ? `
+                        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            <div class="bg-white rounded-lg max-w-sm w-full max-h-[80vh] overflow-y-auto">
+                                <div class="p-4 border-b">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="text-lg font-bold text-gray-800">Todas as Doações</h3>
+                                        <button onclick="hideDonationsModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+                                    </div>
+                                </div>
+                                <div class="p-4 space-y-2">
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Maria Silva</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 73,50</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">João Santos</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 127,80</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Ana Costa</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 45,25</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Pedro Lima</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 89,90</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Carla Mendes</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 156,75</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Roberto Alves</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 32,40</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Fernanda Rocha</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 98,60</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Lucas Ferreira</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 67,30</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Juliana Campos</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 143,20</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-600">Marcos Oliveira</span>
+                                        <span class="text-sm font-semibold" style="color: #114c21;">R$ 54,85</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <header class="bg-white shadow-lg">
+                        <div class="px-4 py-3">
+                            <h1 class="text-2xl font-bold text-center text-gray-800">PROJETO PATAS DO BEM</h1>
+                        </div>
+                    </header>
+
+                    <nav class="bg-white border-t border-gray-200 shadow-sm px-4 py-3">
+                        <div class="flex justify-center space-x-2">
+                            ${[
+                                { id: "inicio", label: "Início" },
+                                { id: "como-ajudar", label: "Como ajudar" },
+                                { id: "galeria", label: "Galeria" },
+                                { id: "contato", label: "Contato" }
+                            ].map(tab => `
+                                <button
+                                    onclick="setActiveTab('${tab.id}'); ${tab.id === 'como-ajudar' ? 'scrollToSection(\'como-ajudar-section\')' : tab.id === 'galeria' ? 'scrollToSection(\'galeria-section\')' : tab.id === 'contato' ? 'scrollToSection(\'contato-section\')' : ''}"
+                                    class="px-4 py-2 rounded-full font-semibold text-sm transition-all duration-200 ${state.activeTab === tab.id ? 'text-white bg-orange-500 shadow-md' : 'text-gray-600 bg-gray-100 hover:bg-orange-100 hover:text-orange-600'}"
+                                >
+                                    ${tab.label}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </nav>
+
+                    <div class="w-full">
+                        <img src="https://midias.lat/wp/wp-content/uploads/2025/08/ban-3.webp" alt="Banner Projeto Patas do Bem" class="w-full h-auto object-cover">
+                    </div>
+
+                    <main class="px-2 py-6 space-y-6">
+                        <div class="bg-white rounded-lg shadow-lg p-4 max-w-full overflow-hidden">
+                            <div class="text-center space-y-6">
+                                <h2 class="text-sm sm:text-base font-bold text-red-600 whitespace-nowrap">PROJETO PATAS DO BEM EM RISCO!</h2>
+                                
+                                <div class="text-gray-800 space-y-4 text-sm sm:text-base leading-relaxed text-center">
+                                    <p>Esses últimos <strong>3 anos</strong>, dediquei a minha vida salvando animais <strong>atropelados, famintos, doentes e abandonados</strong>. Hoje estamos vivendo o <strong>momento mais difícil</strong> da nossa história: já acumulamos <strong class="text-red-600">R$14.500,00</strong> em dívidas e corremos o risco de <strong class="text-red-600">fechar as portas</strong>.</p>
+                                </div>
+
+                                <div class="w-full py-4">
+                                    <vturb-smartplayer id="vid-68ad0170b52da05c0d97bd7d" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer> 
+                                </div>
+
+                                <div class="space-y-4">
+                                    <p class="text-gray-800 text-sm sm:text-base leading-relaxed text-center">Cada animal resgatado recebe <strong>cuidado médico, carinho</strong> e uma <strong>segunda chance de vida</strong>. Para continuarmos essa <strong>missão de amor</strong>, precisamos do seu apoio. 🐾💖</p>
+                                    
+                                    <button onclick="scrollToSection('pix-section')" class="w-full text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-colors flex items-center justify-center space-x-2 animate-pulse" style="background-color: #00c853;">
+                                        <span>AJUDE AGORA</span>
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="como-ajudar-section" class="bg-white rounded-lg shadow-lg p-4 max-w-full overflow-hidden">
+                            <div class="w-full mb-6">
+                                <img src="https://midias.lat/wp/wp-content/uploads/2025/08/ban-4.webp" alt="Banner Como Ajudar" class="w-full h-auto object-cover rounded-lg">
+                            </div>
+
+                            <h4 class="text-xl font-bold text-gray-800 mb-4 text-center">Impactos da sua doação</h4>
+
+                            <ul class="space-y-3 mb-6 max-w-xl mx-auto">
+                                <li class="flex"><span class="font-bold text-green-600 min-w-[60px]">R$30</span><span class="ml-2 text-sm">Alimentação para 1 animal durante uma semana</span></li>
+                                <li class="flex"><span class="font-bold text-green-600 min-w-[60px]">R$50</span><span class="ml-2 text-sm">Ração e medicamentos básicos para 2 animais por 10 dias</span></li>
+                                <li class="flex"><span class="font-bold text-green-600 min-w-[60px]">R$100</span><span class="ml-2 text-sm">Um saco de ração de 10kg que alimentará 5 animais por um mês</span></li>
+                                <li class="flex"><span class="font-bold text-green-600 min-w-[60px]">R$200</span><span class="ml-2 text-sm">Vacinas e vermífugos para 4 animais resgatados</span></li>
+                                <li class="flex"><span class="font-bold text-green-600 min-w-[60px]">R$500</span><span class="ml-2 text-sm">Tratamento veterinário completo e alimentação para 3 animais por um mês</span></li>
+                                <li class="flex"><span class="font-bold text-green-600 min-w-[60px]">R$1000</span><span class="ml-2 text-sm">Cirurgias de emergência, medicamentos e recuperação para animais em estado crítico</span></li>
+                            </ul>
+
+                            <p class="text-gray-700 font-medium italic text-center text-sm mb-6">Qualquer valor é bem-vindo. Sua contribuição faz toda a diferença na vida desses animais!</p>
+
+                            <div id="pix-section" class="pt-4 pb-2 px-3 border-t border-gray-200 text-center">
+                                <div class="relative mb-4 mx-auto max-w-[280px]">
+                                    <div class="py-3 px-3 rounded-md border font-bold mx-auto break-all text-gray-800 bg-gray-100 border-gray-300">${pixKey}</div>
+                                    <div class="absolute inset-0 text-white flex items-center justify-center font-bold rounded-md transition-opacity duration-300 ${state.showCopySuccess ? 'opacity-100 visible' : 'opacity-0 invisible'}" style="background-color: #00c853;">Copiado com sucesso!</div>
+                                </div>
+
+                                <button onclick="copyPixKey()" class="text-white border-none py-3 px-5 rounded-md font-bold cursor-pointer flex items-center justify-center mx-auto w-full max-w-[280px] transition-all duration-300 hover:scale-105" style="background-color: #00c853;">
+                                    ${state.showCopySuccess ? 
+                                        '<svg class="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Copiado!' : 
+                                        '<svg class="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>CONTRIBUA AQUI'
+                                    }
+                                </button>
+
+                                <div class="mt-4 text-sm text-gray-600 text-center">
+                                </div>
+                            </div>
+                        </div>
+
+                        <section class="px-6 pb-6 mb-6">
+                            <div class="max-w-4xl mx-auto">
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                                    <div class="bg-white text-black p-4 text-center">
+                                        <h2 class="text-xl md:text-2xl font-bold mb-2">Doações Recentes</h2>
+                                        <p class="text-sm text-black">Pessoas que estão ajudando o Projeto Patas do Bem</p>
+                                    </div>
+
+                                    <div class="relative w-full h-96 md:h-[500px]">
+                                        <img src="https://midias.lat/wp/wp-content/uploads/2025/08/ajude.png" alt="Mapa do Brasil - Doações" class="w-full h-full object-cover">
+
+                                        <div class="absolute inset-0 flex flex-col justify-center items-center p-4">
+                                            <div class="w-full max-w-md space-y-2">
+                                                <div class="bg-white bg-opacity-95 rounded-lg p-3 shadow-lg border-2 border-green-500">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <svg class="w-4 h-4 text-green-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                            <div>
+                                                                <div class="font-semibold text-gray-800 text-sm">Ana S.</div>
+                                                                <div class="flex items-center text-xs text-gray-600">
+                                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                                                    São Paulo/SP
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="font-bold text-green-600 text-sm">R$ 25,83</div>
+                                                            <div class="text-xs text-gray-500">2min atrás</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-white bg-opacity-95 rounded-lg p-3 shadow-lg">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <svg class="w-4 h-4 text-green-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                            <div>
+                                                                <div class="font-semibold text-gray-800 text-sm">Carlos M.</div>
+                                                                <div class="flex items-center text-xs text-gray-600">
+                                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                                                    Rio de Janeiro/RJ
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="font-bold text-green-600 text-sm">R$ 50,47</div>
+                                                            <div class="text-xs text-gray-500">8min atrás</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-white bg-opacity-95 rounded-lg p-3 shadow-lg">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <svg class="w-4 h-4 text-green-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                            <div>
+                                                                <div class="font-semibold text-gray-800 text-sm">Fernanda L.</div>
+                                                                <div class="flex items-center text-xs text-gray-600">
+                                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                                                    Belo Horizonte/MG
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="font-bold text-green-600 text-sm">R$ 100,29</div>
+                                                            <div class="text-xs text-gray-500">15min atrás</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-white bg-opacity-95 rounded-lg p-3 shadow-lg">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <svg class="w-4 h-4 text-green-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                            <div>
+                                                                <div class="font-semibold text-gray-800 text-sm">Bruno R.</div>
+                                                                <div class="flex items-center text-xs text-gray-600">
+                                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                                                    Salvador/BA
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="font-bold text-green-600 text-sm">R$ 75,64</div>
+                                                            <div class="text-xs text-gray-500">22min atrás</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-white bg-opacity-95 rounded-lg p-3 shadow-lg">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <svg class="w-4 h-4 text-green-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                            <div>
+                                                                <div class="font-semibold text-gray-800 text-sm">Julia P.</div>
+                                                                <div class="flex items-center text-xs text-gray-600">
+                                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                                                    Fortaleza/CE
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="font-bold text-green-600 text-sm">R$ 35,91</div>
+                                                            <div class="text-xs text-gray-500">28min atrás</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-gray-50 p-4 text-center">
+                                        <p class="text-base text-black font-bold mb-2">Doações anônimas para proteger a privacidade dos doadores</p>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="bg-white rounded-lg p-4 shadow-sm mt-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Tudo o que você precisa saber sobre o Projeto Patas do Bem</h3>
+                            <div class="space-y-3">
+                                ${[
+                                    {
+                                        id: "como-ajudar",
+                                        question: "Como ajudar o Projeto Patas do Bem?",
+                                        answer: `<p>• Fazendo uma doação via PIX!</p>
+                                                <p>• Compartilhando nossa causa nas suas redes sociais</p>
+                                                <p>• Divulgando para amigos e familiares que possam se sensibilizar com a causa</p>
+                                                <p>• Qualquer valor ajuda - desde R$30 já faz diferença na vida dos animais</p>`
+                                    },
+                                    {
+                                        id: "quando-criada",
+                                        question: "Há quanto tempo o Projeto Patas do Bem existe?",
+                                        answer: `<p>O Projeto Patas do Bem existe há 3 anos, dedicando-se ao resgate e cuidado de animais abandonados, atropelados e em situação de vulnerabilidade.</p>`
+                                    },
+                                    {
+                                        id: "situacao",
+                                        question: "Qual a situação atual do projeto?",
+                                        answer: `<p><strong>Situação crítica:</strong> Dívidas acumuladas de R$ 14.500,00</p>
+                                                <p><strong>Animais sob cuidado:</strong> Mais de 78 cães, incluindo idosos e com sarna</p>
+                                                <p><strong>Principais necessidades:</strong> Ração, medicamentos e aluguel em atraso</p>
+                                                <p><strong>Risco:</strong> Possível fechamento das portas sem ajuda urgente</p>`
+                                    },
+                                    {
+                                        id: "pix",
+                                        question: "Como posso ajudar via PIX?",
+                                        answer: `<p><strong>Basta clicar no botão "CONTRIBUA AQUI"</p>
+                                                <p><strong>Responsável:</strong> Responsável do Projeto Patas do Bem</p>
+                                                <p>Sua doação chega instantaneamente e salva vidas!</p>`
+                                    },
+                                    {
+                                        id: "impacto",
+                                        question: "Qual o impacto da minha doação?",
+                                        answer: `<p><strong>R$ 30:</strong> Alimentação para 1 animal durante uma semana</p>
+                                                <p><strong>R$ 100:</strong> Um saco de ração de 10kg que alimentará 5 animais por um mês</p>
+                                                <p><strong>R$ 200:</strong> Vacinas e vermífugos para 4 animais resgatados</p>
+                                                <p><strong>R$ 500:</strong> Tratamento veterinário completo para 3 animais por um mês</p>
+                                                <p><strong>R$ 1000:</strong> Cirurgias de emergência e recuperação para animais em estado crítico</p>`
+                                    }
+                                ].map(faq => `
+                                    <div class="border-b border-gray-200 pb-3">
+                                        <button onclick="toggleFaq('${faq.id}')" class="w-full flex items-center justify-between text-left">
+                                            <span class="text-gray-800 font-medium">${faq.question}</span>
+                                            <svg class="w-5 h-5 text-gray-500 transition-transform ${state.expandedFaq === faq.id ? 'rotate-180' : ''}" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                                            </svg>
+                                        </button>
+                                        ${state.expandedFaq === faq.id ? `<div class="mt-3 text-sm text-gray-600 space-y-2">${faq.answer}</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div id="galeria-section" class="bg-white rounded-lg shadow-lg p-4 max-w-full overflow-hidden">
+                            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Alguns dos Nossos Animais</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                ${animals.map(animal => `
+                                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                        <img src="${animal.image}" alt="${animal.name}" class="w-full aspect-[3/4] object-cover rounded-lg mb-2">
+                                        <h4 class="text-base font-bold text-gray-800">${animal.name}</h4>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="mt-6 text-center">
+                                <button onclick="scrollToSection('pix-section')" class="w-full text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-colors flex items-center justify-center space-x-2 animate-pulse" style="background-color: #00c853;">
+                                    <span>AJUDE AGORA</span>
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="contato-section" class="bg-white rounded-lg shadow-lg p-4 max-w-full overflow-hidden">
+                            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Entre em Contato</h3>
+                            <div class="space-y-4 text-center">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    <span class="text-gray-700">Rua das Flores, 123 - Vila Madalena, São Paulo - SP</span>
+                                </div>
+                                <div class="flex items-center justify-center space-x-2">
+                                    <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                    <span class="text-gray-700">doehojeparaobem@gmail.com</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-4">Entre em contato conosco via email para mais informações sobre adoção, voluntariado ou para saber como ajudar nossos animais resgatados.</p>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            `;
+        }
+        
+        function copyPixKey() {
+    window.location.href = './c/checkout/index.html'; // tipo 'obrigado.html', 'golpe.pdf', etc
+}
+
+        // Load VSL script
+        function loadVSLScript() {
+            const script = document.createElement("script");
+            script.src = "https://scripts.converteai.net/0c8ee47d-60ab-46a8-8842-5fa7b2be728c/players/68ad0170b52da05c0d97bd7d/v4/player.js";
+            script.async = true;
+            document.head.appendChild(script);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            render();
+            loadVSLScript();
+        });
+    </script>
+</body>
+</html>

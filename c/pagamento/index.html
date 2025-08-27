@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento PIX - Doação para Talita</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    
+    <!-- Biblioteca QRCode.js para gerar QR codes -->
+    <script src="js/qrcode.min.js"></script>
+    <!-- Fallback para QRCode via CDN -->
+    <script>
+        // Verificar se a biblioteca local carregou, senão usar CDN
+        window.addEventListener('load', function() {
+            if (typeof QRCode === 'undefined') {
+                console.log('Carregando QRCode via CDN...');
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+                script.onload = function() {
+                    console.log('QRCode carregado via CDN');
+                };
+                script.onerror = function() {
+                    console.error('Falha ao carregar QRCode via CDN');
+                };
+                document.head.appendChild(script);
+            } else {
+                console.log('QRCode carregado localmente');
+            }
+        });
+    </script>
+    
+    <!-- Sistema de Pixels do Facebook -->
+    <script src="../pixel/config.js"></script>
+    <script src="../pixel/loader.js"></script>
+    <script src="../pixel/events.js"></script>
+    <script src="../pixel/payment.js"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .pix-payment-page { background-color: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .pix-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .vakinha-logo img { height: 40px; width: auto; max-width: 200px; }
+        .secure-badge { display: flex; align-items: center; color: #01A355; font-size: 11px; background-color: #f0f9f4; padding: 5px 10px; border-radius: 20px; }
+        .secure-badge i { margin-right: 5px; }
+        .quase-la { text-align: center; font-size: 24px; font-weight: 700; color: #333; margin: 0 0 16px; }
+        .pix-message { background-color: #f0f8ff; border-radius: 8px; padding: 16px; margin-bottom: 20px; text-align: center; color: #0066cc; border: 1px solid #d1e9ff; }
+        .pix-value { text-align: center; font-size: 18px; font-weight: 600; margin-bottom: 24px; color: #333; }
+        .qr-code-section { margin-bottom: 24px; }
+        .qr-code-container { background-color: #f9f9f9; border-radius: 8px; padding: 16px; display: flex; justify-content: center; margin-bottom: 8px; border: 1px solid #eee; }
+        #qrcode { width: 200px; height: 200px; background-color: white; padding: 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .pix-code-container { margin-bottom: 16px; position: relative; }
+        .pix-code { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 14px; box-sizing: border-box; background-color: #f9f9f9; color: #333; resize: none; height: 100px; }
+        .copy-button-large { width: 100%; background-color: #01A355; color: white; border: none; border-radius: 8px; padding: 16px; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 20px; transition: background-color 0.3s; }
+        .copy-button-large:hover { background-color: #008a47; }
+        .timer { text-align: center; font-size: 24px; font-weight: 700; color: #ff3b30; margin-bottom: 24px; }
+        .payment-status { background-color: #e8f5e9; border-radius: 8px; padding: 16px; display: flex; align-items: center; margin-bottom: 20px; border: 1px solid #c8e6c9; }
+        .success-icon { width: 40px; height: 40px; background-color: #01A355; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-right: 16px; }
+        .success-content h3 { margin: 0 0 8px; color: #01A355; }
+    
+.pix-steps {
+    margin-bottom: 24px;
+}
+.pix-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+.step-icon {
+    margin-right: 12px;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background-color: #f0f9f4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #01A355;
+}
+.step-text {
+    font-size: 14px;
+    color: #555;
+    flex: 1;
+}
+.timer {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #01A355;
+    margin-bottom: 24px;
+}
+.timer-warning {
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+.pix-loading-animated {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #01A355;
+    text-align: center;
+    margin: 24px 0 16px 0;
+    animation: pix-blink 1s infinite;
+    letter-spacing: 1px;
+}
+@keyframes pix-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="pix-payment-page">
+        <div class="pix-header">
+            <div class="vakinha-logo"><img src="../files/logo.svg" alt="Logo"></div>
+            <div class="secure-badge"><i class="fas fa-lock"></i> Ambiente seguro</div>
+        </div>
+        <h2 class="quase-la">Quase lá...</h2>
+        <div class="pix-message">
+            <p>Sua ajuda significa o mundo pra essa pessoa! Obrigado por fazer parte dessa corrente do bem. ❤️</p>
+        </div>
+        <div class="pix-value" id="displayAmount">Valor: R$ 0,00</div>
+        <div id="pix-loading" class="pix-loading-animated">Gerando código PIX...</div>
+        
+        <!-- Campo QR Code -->
+        <div class="qr-code-section" id="qr-code-section" style="display:none;">
+            <h3 style="text-align: center; margin-bottom: 16px; color: #333; font-size: 18px; font-weight: 600;">QR Code PIX</h3>
+            <div class="qr-code-container">
+                <div id="qrcode"></div>
+            </div>
+            <p style="text-align: center; color: #666; font-size: 14px; margin-top: 12px;">
+                Escaneie o QR Code com seu aplicativo bancário ou use o código abaixo
+            </p>
+        </div>
+        
+        
+        
+        <div class="pix-code-container" id="pix-code-container" style="display:none;">
+            <textarea class="pix-code" readonly id="pixCode"></textarea>
+        </div>
+        <button class="copy-button-large" id="copyButton" style="display:none;"><i class="fas fa-copy"></i> COPIAR CÓDIGO PIX</button>
+        <div class="timer" id="payment-timer">
+            <span id="timer-display" data-time-left="1800">30:00</span>
+        </div>
+        
+        <div class="pix-steps">
+            <div class="pix-step">
+                <div class="step-icon">
+                    <i class="fas fa-copy"></i>
+                </div>
+                <div class="step-text">Copie o código PIX acima</div>
+            </div>
+            <div class="pix-step">
+                <div class="step-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="step-text">Abra seu aplicativo bancário e selecione a opção PIX Copia e Cola</div>
+            </div>
+            <div class="pix-step">
+                <div class="step-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="step-text">Cole o código e conclua o pagamento</div>
+            </div>
+        </div>
+        <div class="payment-status" id="paymentSuccess" style="display:none">
+            <div class="success-icon"><i class="fas fa-check"></i></div>
+            <div class="success-content">
+                <h3>Pagamento Aprovado!</h3>
+                <p>Agradecemos sua contribuição. Redirecionando...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+function formatCurrency(value) {
+    return 'R$ ' + parseFloat(value).toFixed(2).replace('.', ',');
+}
+function generateValidCPF() {
+    const randomDigits = () => Math.floor(Math.random() * 10);
+    const cpf = Array.from({ length: 9 }, randomDigits);
+    const calc = (cpfArray, factor) => {
+        const total = cpfArray.reduce((acc, num, idx) => acc + num * (factor - idx), 0);
+        const rest = 11 - (total % 11);
+        return rest >= 10 ? 0 : rest;
+    };
+    cpf.push(calc(cpf, 10));
+    cpf.push(calc(cpf, 11));
+    return cpf.join('');
+}
+
+
+function updatePixCode(pixCode) {
+    try {
+        // Atualizar o campo visual com o código real da API
+        document.getElementById("pixCode").value = pixCode;
+        
+        // Mostrar o container do código PIX
+        document.getElementById("pix-code-container").style.display = "block";
+        document.getElementById("copyButton").style.display = "inline-block";
+        
+        document.getElementById("pix-loading").style.display = "none";
+        console.log("Código PIX atualizado:", pixCode);
+    } catch (error) {
+        console.error("Erro ao atualizar código PIX:", error);
+        // Continuar mesmo se houver erro
+    }
+    
+    // Gerar QR Code
+    const qrCodeElement = document.getElementById("qrcode");
+    if (qrCodeElement) {
+        qrCodeElement.innerHTML = ""; // Limpar conteúdo anterior
+        
+        // Função para tentar gerar QR Code
+        function tryGenerateQRCode() {
+            if (typeof QRCode !== 'undefined') {
+                try {
+                    const qr = new QRCode(qrCodeElement, {
+                        text: pixCode,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                    
+                    // Mostrar seção do QR Code
+                    document.getElementById("qr-code-section").style.display = "block";
+                    console.log("QR Code gerado com sucesso!");
+                    return true;
+                } catch (error) {
+                    console.error("Erro ao gerar QR Code:", error);
+                    return false;
+                }
+            }
+            return false;
+        }
+        
+        // Verificar se a biblioteca QRCode está disponível
+        if (!tryGenerateQRCode()) {
+            // Se falhar, tentar novamente após um breve delay (caso a biblioteca esteja carregando via CDN)
+            setTimeout(() => {
+                if (!tryGenerateQRCode()) {
+                    // Fallback final: usar API externa para gerar QR code
+                    console.log("Usando API externa para QR Code");
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixCode)}`;
+                    qrCodeElement.innerHTML = `<img src="${qrUrl}" alt="QR Code PIX" style="width: 200px; height: 200px; border-radius: 4px;">`;
+                    document.getElementById("qr-code-section").style.display = "block";
+                }
+            }, 1000);
+        }
+    }
+    
+    document.getElementById("pix-code-container").style.display = "block";
+    document.getElementById("copyButton").style.display = "inline-block";
+}
+let globalAmount = 3000;
+// Código PIX será atualizado diretamente no campo
+async function generatePixCode() {
+    const valueParam = getUrlParameter("value");
+    if (valueParam) {
+        const cleanValue = valueParam.replace(/[^\d]/g, "");
+        globalAmount = parseInt(cleanValue, 10);
+        document.getElementById("displayAmount").textContent = "Valor: " + formatCurrency(globalAmount / 100);
+    }
+    // Gerar um external_id único para a transação
+    const externalId = "ext_" + Date.now() + Math.floor(Math.random() * 10000);
+    const payload = {
+        external_id: externalId,
+        total_amount: globalAmount / 100,
+        payment_method: "PIX",
+        webhook_url: "https://oficial-lojasegura.site/webhook-rublion.php", // Substitua pela sua URL de webhook real
+        items: [
+            {
+                id: "item1",
+                title: "Renda extra Front",
+                description: "Pagamento via PIX",
+                price: globalAmount / 100,
+                quantity: 1,
+                is_physical: false
+            }
+        ],
+        ip: "127.0.0.1", // Opcional: pode ser dinâmico se desejar
+        customer: {
+            name: "Cliente front",
+            email: "cliente@gmail.com",
+            phone: "11999999999",
+            document_type: "CPF",
+            document: generateValidCPF(),
+            utm_source: getUrlParameter("utm_source") || "",
+            utm_medium: getUrlParameter("utm_medium") || "",
+            utm_campaign: getUrlParameter("utm_campaign") || "",
+            utm_content: getUrlParameter("utm_content") || "",
+            utm_term: getUrlParameter("utm_term") || ""
+        }
+        // splits: [] // Adicione se necessário
+    };
+    try {
+        const response = await fetch("https://api.rublion.com.br/v1/transactions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "api-secret": "sk_bc561ef0e555ebb452b529d6039785707373162ce91b22fe4c4bbce42d14995932d6e0cc6633729771fe3b127f4965eaa5b21fecf1b027e2cf4baa7997aaa391"
+            },
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        console.log("[Rublion] Status HTTP:", response.status);
+        console.log("[Rublion] Resposta completa:", result);
+        if (result && result.pix && result.pix.payload && result.id) {
+            try {
+                updatePixCode(result.pix.payload);
+                startVerification(result.id);
+                console.log("PIX gerado com sucesso:", result.pix.payload);
+            } catch (error) {
+                console.error("Erro ao processar resposta da API:", error);
+                // Continuar mesmo se houver erro na atualização
+                document.getElementById("pix-loading").style.display = "none";
+                document.getElementById("pix-code-container").style.display = "block";
+                document.getElementById("copyButton").style.display = "inline-block";
+            }
+        } else {
+            document.getElementById("pix-loading").textContent = "Erro ao gerar PIX. Tente novamente mais tarde.";
+            if(result && result.hasError !== undefined) {
+                console.error("[Rublion] Erro na resposta:", result);
+            }
+            throw new Error("Resposta inválida da API.");
+        }
+    } catch (error) {
+        document.getElementById("pix-loading").textContent = "Erro ao gerar PIX. Tente novamente mais tarde.";
+        console.error("Erro ao gerar PIX:", error);
+    }
+}
+function startVerification(transactionId) {
+    const verifyUrl = `https://api.rublion.com.br/v1/transactions/${transactionId}`;
+    setInterval(async () => {
+        try {
+            const response = await fetch(verifyUrl, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "api-secret": "sk_bc561ef0e555ebb452b529d6039785707373162ce91b22fe4c4bbce42d14995932d6e0cc6633729771fe3b127f4965eaa5b21fecf1b027e2cf4baa7997aaa391"
+                }
+            });
+            const result = await response.json();
+            console.log("[Rublion Consulta] Resposta:", result);
+            if (result && result.status === "AUTHORIZED") {
+                document.getElementById("paymentSuccess").style.display = "flex";
+                // Marca conversão na UTMIFY
+                if (window.utmifyConversion) {
+                    window.utmifyConversion();
+                    console.log('[UTMIFY] Conversão marcada!');
+                } else {
+                    console.warn('[UTMIFY] utmifyConversion não está disponível.');
+                }
+                setTimeout(() => { window.location.href = "../upback"; }, 3000);
+            }
+        } catch (err) {
+            console.warn("[Rublion Consulta] Erro ao verificar pagamento:", err);
+        }
+    }, 5000);
+}
+document.getElementById("copyButton").addEventListener("click", function() {
+    try {
+        // Copiar o código PIX do campo
+        const codeToCopy = document.getElementById("pixCode").value;
+        
+        if (codeToCopy) {
+            // Criar um elemento temporário para copiar
+            const tempInput = document.createElement("textarea");
+            tempInput.value = codeToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            
+            // Feedback visual
+            const btn = document.getElementById("copyButton");
+            btn.innerHTML = '<i class="fas fa-check"></i> COPIADO';
+            setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> COPIAR CÓDIGO PIX'; }, 1500);
+            
+            console.log("Código copiado (real da API):", codeToCopy);
+        } else {
+            console.warn("Nenhum código PIX disponível para copiar");
+        }
+    } catch (error) {
+        console.error("Erro ao copiar código PIX:", error);
+        // Feedback de erro
+        const btn = document.getElementById("copyButton");
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ERRO';
+        setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> COPIAR CÓDIGO PIX'; }, 1500);
+    }
+});
+
+let timeLeft = 1800;
+function updateTimer() {
+    const timerDisplay = document.getElementById("timer-display");
+    if (!timerDisplay) return;
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    if (timeLeft <= 300) {
+        timerDisplay.classList.add("timer-warning");
+    }
+    if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        alert("O tempo para pagamento expirou.");
+        window.location.href = "../";
+    }
+    timeLeft--;
+}
+const timerInterval = setInterval(updateTimer, 1000);
+
+window.onload = () => { generatePixCode(); updateTimer(); };
+</script>
+</body>
+</html>
